@@ -1,0 +1,116 @@
+#root {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.site-header {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--card-padding);
+  background: var(--bg-card);
+  box-shadow: var(--shadow);
+}
+
+.header-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.header-title {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--text-h);
+  margin: 6px 0;
+}
+
+.header-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--section-padding);
+  background: var(--bg-card);
+  box-shadow: var(--shadow);
+}
+
+.section h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-h);
+  margin: 0 0 16px 0;
+}
+
+.about-text {
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.skills-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.skill-card {
+  height: 46px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-h);
+}
+
+.site-footer {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  background: var(--bg-card);
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.footer-email-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 10px 0;
+}
+
+.footer-copyright {
+  color: var(--text-muted);
+  margin: 0;
+}
