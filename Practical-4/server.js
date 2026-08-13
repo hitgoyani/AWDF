@@ -26,6 +26,15 @@ const requireJsonHeader = (req, res, next) => {
 
 app.use(requireJsonHeader);
 
+const validateTaskId = (req, res, next) => {
+  const taskId = parseInt(req.params.id, 10);
+  if (isNaN(taskId)) {
+    return res.status(400).json({ error: 'Bad Request: Task ID must be a valid integer number' });
+  }
+  req.parsedTaskId = taskId;
+  next();
+};
+
 let tasks = [
   { id: 1, title: 'Complete Practical 4 Express API', completed: false },
   { id: 2, title: 'Review Middleware Pipeline Concepts', completed: true },
@@ -39,17 +48,12 @@ app.get('/tasks', (req, res) => {
   res.status(200).json(tasks);
 });
 
-app.get('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id, 10);
-  if (isNaN(taskId)) {
-    return res.status(400).json({ error: 'Invalid task ID format' });
-  }
-
+app.get('/tasks/:id', validateTaskId, (req, res) => {
+  const taskId = req.parsedTaskId;
   const task = tasks.find((t) => t.id === taskId);
   if (!task) {
     return res.status(404).json({ error: `Task with ID ${taskId} not found` });
   }
-
   res.status(200).json(task);
 });
 
@@ -69,12 +73,8 @@ app.post('/tasks', (req, res) => {
   res.status(201).json(newTask);
 });
 
-app.put('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id, 10);
-  if (isNaN(taskId)) {
-    return res.status(400).json({ error: 'Invalid task ID format' });
-  }
-
+app.put('/tasks/:id', validateTaskId, (req, res) => {
+  const taskId = req.parsedTaskId;
   const taskIndex = tasks.findIndex((t) => t.id === taskId);
   if (taskIndex === -1) {
     return res.status(404).json({ error: `Task with ID ${taskId} not found` });
@@ -91,12 +91,8 @@ app.put('/tasks/:id', (req, res) => {
   res.status(200).json(tasks[taskIndex]);
 });
 
-app.delete('/tasks/:id', (req, res) => {
-  const taskId = parseInt(req.params.id, 10);
-  if (isNaN(taskId)) {
-    return res.status(400).json({ error: 'Invalid task ID format' });
-  }
-
+app.delete('/tasks/:id', validateTaskId, (req, res) => {
+  const taskId = req.parsedTaskId;
   const taskIndex = tasks.findIndex((t) => t.id === taskId);
   if (taskIndex === -1) {
     return res.status(404).json({ error: `Task with ID ${taskId} not found` });
