@@ -7,7 +7,7 @@
 
 ---
 
-## 📂 Repository Structure
+## 📂 Repository Structure & Practical Navigation
 
 | Practical | Topic | Technology Stack | Folder Link |
 | :--- | :--- | :--- | :--- |
