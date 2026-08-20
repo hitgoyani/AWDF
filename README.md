@@ -1,28 +1,37 @@
-# AWDF (Advanced Web Development Framework) Lab Practicals
+# Advanced Web Development Frameworks (ITUE301) — Lab Work
 
 **Student Name**: Hit Goyani  
 **ID / Roll No**: 24DIT021  
+**Semester**: 5th Semester B.Tech Information Technology  
 **University**: CHARUSAT  
-**Repository**: [github.com/hitgoyani/AWDF](https://github.com/hitgoyani/AWDF)
 
 ---
 
-## 📂 Repository Structure & Practical Navigation
+## 📂 Repository Structure
 
-| Practical | Topic | Technology Stack | Folder Link |
-| :--- | :--- | :--- | :--- |
-| **Practical 1** | Introduction to React & Component Architecture | React 19, Vite, CSS3 | [`/Practical-1`](./Practical-1) |
-| **Practical 2** | State Management & Routing in React | React 19, React Router v6, `useState` | [`/Practical-2`](./Practical-2) |
-| **Practical 3** | API Integration & Data Rendering in React | React 19, GitHub REST API, `useEffect` | [`/Practical-3`](./Practical-3) |
-| **Practical 4** | Building a RESTful API with Node.js & Express | Node.js, Express, Middleware Pipeline | [`/Practical-4`](./Practical-4) |
+- **[`/portfolio`](./portfolio)**: Frontend React single-page application covering **Practicals 1, 2, and 3**.
+  - Practical 1: React components and props architecture (`Header`, `About`, `Skills`, `Footer`).
+  - Practical 2: React Router v6 navigation and state management with `useState`.
+  - Practical 3: GitHub REST API integration with `useEffect`, loading spinners, and error handling.
+
+- **[`/task-manager-api`](./task-manager-api)**: Backend server covering **Practicals 4 and 5**.
+  - Practical 4: Express RESTful API with logging middleware, header validation, and CRUD operations.
+  - Practical 5: MongoDB and Mongoose schema design with validation and pre-save hooks.
 
 ---
 
-## 🚀 Running Any Practical
+## 🚀 Quick Start
 
-Navigate to the respective practical directory and run:
-
+### Frontend (Practicals 1, 2, 3)
 ```bash
+cd portfolio
+npm install
+npm run dev
+```
+
+### Backend (Practicals 4, 5)
+```bash
+cd task-manager-api
 npm install
 npm run dev
 ```
