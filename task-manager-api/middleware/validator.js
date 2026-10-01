@@ -114,8 +114,13 @@ export const validateTaskInput = (req, res, next) => {
     }
   }
 
-  if (priority !== undefined && !['low', 'medium', 'high'].includes(priority)) {
-    errors.push(`"${priority}" is not a valid priority. Allowed values: low, medium, high`);
+  if (priority !== undefined) {
+    const normalizedPriority = String(priority).toLowerCase();
+    if (!['low', 'medium', 'high'].includes(normalizedPriority)) {
+      errors.push(`"${priority}" is not a valid priority. Allowed values: low, medium, high`);
+    } else {
+      req.body.priority = normalizedPriority;
+    }
   }
 
   if (errors.length > 0) {
