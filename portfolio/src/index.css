@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
   --primary-light: rgba(37, 99, 235, 0.08);
-  --primary-border: rgba(37, 99, 235, 0.2);
+  --primary-subtle: rgba(37, 99, 235, 0.12);
+  --primary-border: rgba(37, 99, 235, 0.22);
 
   --accent-cyan: #06b6d4;
   --accent-purple: #8b5cf6;
@@ -23,31 +24,32 @@
   --border: #e2e8f0;
   --border-focus: #3b82f6;
 
-  --glass-bg: rgba(255, 255, 255, 0.9);
-  --glass-border: rgba(226, 232, 240, 0.85);
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(226, 232, 240, 0.9);
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
-  --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
-  --shadow-lg: 0 16px 36px -4px rgba(15, 23, 42, 0.08), 0 6px 16px -2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  --shadow-lg: 0 16px 36px -4px rgba(15, 23, 42, 0.1), 0 6px 16px -2px rgba(15, 23, 42, 0.04);
   --shadow-glow: 0 0 24px rgba(37, 99, 235, 0.18);
 
   --radius-xs: 6px;
   --radius-sm: 10px;
   --radius: 16px;
-  --radius-lg: 22px;
+  --radius-lg: 24px;
 
   --font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   --transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 
-  --content-width: 900px;
+  --content-width: 1140px;
 }
 
 .dark-mode {
   --primary: #3b82f6;
   --primary-hover: #60a5fa;
   --primary-light: rgba(59, 130, 246, 0.15);
-  --primary-border: rgba(59, 130, 246, 0.3);
+  --primary-subtle: rgba(59, 130, 246, 0.2);
+  --primary-border: rgba(59, 130, 246, 0.35);
 
   --accent-cyan: #22d3ee;
   --accent-purple: #a78bfa;
@@ -58,21 +60,21 @@
   --text: #cbd5e1;
   --text-h: #f8fafc;
   --text-muted: #94a3b8;
-  --bg: #090d16;
-  --bg-subtle: #0f172a;
-  --bg-card: #131c2e;
-  --bg-card-hover: #18243b;
-  --input-bg: #0b1120;
-  --border: #1e293b;
+  --bg: #0b0f19;
+  --bg-subtle: #111827;
+  --bg-card: #151e32;
+  --bg-card-hover: #1c2742;
+  --input-bg: #0d1424;
+  --border: #1f293d;
   --border-focus: #60a5fa;
 
-  --glass-bg: rgba(19, 28, 46, 0.88);
-  --glass-border: rgba(51, 65, 85, 0.6);
+  --glass-bg: rgba(21, 30, 50, 0.9);
+  --glass-border: rgba(51, 65, 85, 0.65);
 
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 2px 8px -1px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 20px 40px -4px rgba(0, 0, 0, 0.7);
-  --shadow-glow: 0 0 25px rgba(59, 130, 246, 0.25);
+  --shadow-glow: 0 0 25px rgba(59, 130, 246, 0.28);
 }
 
 html, body {
@@ -82,8 +84,8 @@ html, body {
   font-family: var(--font-sans);
   color: var(--text);
   background-color: var(--bg);
-  background-image: radial-gradient(circle at 12% 12%, rgba(37, 99, 235, 0.04) 0%, transparent 45%),
-                    radial-gradient(circle at 88% 88%, rgba(139, 92, 246, 0.04) 0%, transparent 45%);
+  background-image: radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.05) 0%, transparent 45%),
+                    radial-gradient(circle at 90% 90%, rgba(139, 92, 246, 0.05) 0%, transparent 45%);
   background-attachment: fixed;
   transition: background-color 0.25s ease, color 0.25s ease;
   line-height: 1.65;
