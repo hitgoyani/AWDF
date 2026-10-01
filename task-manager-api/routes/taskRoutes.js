@@ -1,37 +1,50 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import Task from '../models/Task.js';
-import { validateTaskId } from '../middleware/validator.js';
+import { validateTaskId, validateTaskInput } from '../middleware/validator.js';
+import { optionalAuth, requireAuth } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Temporary in-memory storage for Practical 4 (used as seamless fallback if MongoDB is not connected)
+// Seed initial tasks for fallback in-memory mode
 export let inMemoryTasks = [
   {
     _id: '1',
     id: 1,
-    title: 'Complete Practical 4 Express API Pipeline',
-    description: 'Implement request logger, Content-Type validator, and CRUD routes',
+    title: 'Complete Practical 6 Full-Stack Integration',
+    description: 'Wire React frontend with Node/Express/MongoDB with state synchronization & CORS',
     completed: true,
     priority: 'high',
+    userEmail: '24dit021@charusat.edu.in',
     createdAt: new Date().toISOString(),
   },
   {
     _id: '2',
     id: 2,
-    title: 'Complete Practical 5 MongoDB Mongoose Schema',
-    description: 'Design validated schema with priority enums and pre-save trim hooks',
+    title: 'Complete Practical 7 JWT Authentication Pipeline',
+    description: 'Implement bcrypt password hashing, JWT token generation, auth middleware & server input validation',
+    completed: true,
+    priority: 'high',
+    userEmail: '24dit021@charusat.edu.in',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: '3',
+    id: 3,
+    title: 'Complete Practical 8 React Lazy Loading & Code Splitting',
+    description: 'Optimize bundle size using React.lazy, Suspense fallback UI and measure network performance',
     completed: false,
     priority: 'medium',
+    userEmail: '24dit021@charusat.edu.in',
     createdAt: new Date().toISOString(),
   },
 ];
 
 /**
  * 1. GET /tasks
- * Retrieve all tasks
+ * Retrieve all tasks (Supports optional user filtering or full list)
  */
-router.get('/', async (req, res, next) => {
+router.get('/', optionalAuth, async (req, res, next) => {
   try {
     if (mongoose.connection.readyState === 1) {
       const tasks = await Task.find().sort({ createdAt: -1 });
@@ -46,7 +59,7 @@ router.get('/', async (req, res, next) => {
 
 /**
  * 2. GET /tasks/:id
- * Retrieve a single task by ID (with 404 handling)
+ * Retrieve a single task by ID (with 404 handling and ID validation)
  */
 router.get('/:id', validateTaskId, async (req, res, next) => {
   try {
@@ -78,38 +91,25 @@ router.get('/:id', validateTaskId, async (req, res, next) => {
 
 /**
  * 3. POST /tasks
- * Create a new task (validates schema)
+ * Create a new task (validates input schema, attaches authenticated user if present)
  */
-router.post('/', async (req, res, next) => {
+router.post('/', optionalAuth, validateTaskInput, async (req, res, next) => {
   try {
     const { title, description, completed, priority } = req.body;
+    const userEmail = req.user ? req.user.email : req.body.userEmail || 'guest@example.com';
+    const userId = req.user && mongoose.Types.ObjectId.isValid(req.user.id) ? req.user.id : null;
 
     if (mongoose.connection.readyState === 1) {
       const newTask = new Task({
         title,
         description,
-        completed,
-        priority,
+        completed: Boolean(completed),
+        priority: priority || 'medium',
+        user: userId,
+        userEmail,
       });
       const savedTask = await newTask.save();
       return res.status(201).json(savedTask);
-    }
-
-    // In-memory fallback validation
-    if (!title || typeof title !== 'string' || !title.trim()) {
-      return res.status(400).json({
-        success: false,
-        error: 'Validation Error',
-        details: ['Task title is required and cannot be empty'],
-      });
-    }
-
-    if (priority && !['low', 'medium', 'high'].includes(priority)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Validation Error',
-        details: [`${priority} is not a valid priority. Allowed values: low, medium, high`],
-      });
     }
 
     const newTask = {
@@ -119,6 +119,7 @@ router.post('/', async (req, res, next) => {
       description: description ? description.trim() : '',
       completed: Boolean(completed),
       priority: priority || 'medium',
+      userEmail,
       createdAt: new Date().toISOString(),
     };
 
@@ -131,9 +132,9 @@ router.post('/', async (req, res, next) => {
 
 /**
  * 4. PUT /tasks/:id
- * Update an existing task by ID
+ * Update an existing task by ID (validates ID and input payload)
  */
-router.put('/:id', validateTaskId, async (req, res, next) => {
+router.put('/:id', validateTaskId, validateTaskInput, async (req, res, next) => {
   try {
     const { id } = req.params;
 

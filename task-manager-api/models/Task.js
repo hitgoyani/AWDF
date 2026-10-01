@@ -33,6 +33,15 @@ const taskSchema = new mongoose.Schema(
       },
       default: 'medium',
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    userEmail: {
+      type: String,
+      default: '',
+    },
     createdAt: {
       type: Date,
       default: Date.now,
