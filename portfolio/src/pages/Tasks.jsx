@@ -136,6 +136,33 @@ function Tasks() {
     }
   };
 
+  // Practical 13: Handle AI Task Generation for Edit Modal
+  const handleAiSuggestForEdit = async () => {
+    if (!editTitle.trim()) {
+      showError('Please provide a Task Title first.');
+      return;
+    }
+    setAiLoading(true);
+    try {
+      showInfo('Contacting AI Assistant to refine task details...');
+      const res = await generateAiDescription({
+        title: editTitle.trim(),
+        priority: editPriority,
+      });
+      if (res && res.description) {
+        setEditDescription(res.description);
+      }
+      if (res && res.suggestedPriority) {
+        setEditPriority(res.suggestedPriority);
+      }
+      showSuccess('AI suggestion populated into edit form!');
+    } catch (err) {
+      showError(err.message || 'Failed to generate AI suggestion.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   // 2. Create Task (POST /tasks) with optimistic UI update
   const handleCreateTask = async (e) => {
     e.preventDefault();
@@ -605,12 +632,24 @@ function Tasks() {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="edit-desc" className="form-label">
-                    Description
-                  </label>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <label htmlFor="edit-desc" className="form-label" style={{ margin: 0 }}>
+                      Description
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleAiSuggestForEdit}
+                      disabled={aiLoading}
+                      className="btn-ai-generate"
+                      title="Practical 13: Auto-refine task description using AI"
+                    >
+                      {aiLoading ? '✨ Refining...' : '🤖 AI Auto-Draft'}
+                    </button>
+                  </div>
                   <textarea
                     id="edit-desc"
                     rows="3"
+                    placeholder="Describe what needs to be completed..."
                     value={editDescription}
                     onChange={(e) => setEditDescription(e.target.value)}
                     className="form-textarea"
