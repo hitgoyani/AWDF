@@ -2206,3 +2206,70 @@
   line-height: 1.45;
 }
 
+/* =========================================================================
+   PRACTICAL 9 & 13 ENHANCEMENTS: CACHE PILL & AI GENERATION
+   ========================================================================= */
+
+.cache-status-pill {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #059669;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+body.dark-mode .cache-status-pill {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.cache-counts {
+  font-size: 0.76rem;
+  opacity: 0.85;
+}
+
+.btn-ai-generate {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+  color: #ffffff;
+  border: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-ai-generate:hover:not(:disabled) {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45);
+}
+
+.btn-ai-generate:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  animation: pulse-glow 1.5s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.ai-disclaimer-pill {
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.4;
+  border: 1px dashed rgba(99, 102, 241, 0.4);
+}
+
+

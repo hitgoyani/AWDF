@@ -1,5 +1,13 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
-import { getTasks, createTask, updateTask, deleteTask, checkApiHealth } from '../api/api.js';
+import {
+  getTasks,
+  createTask,
+  updateTask,
+  deleteTask,
+  checkApiHealth,
+  getCacheStats,
+  generateAiDescription,
+} from '../api/api.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
@@ -17,6 +25,14 @@ function Tasks() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [serverStatus, setServerStatus] = useState({ online: false, db: 'Checking...' });
+
+  // Practical 9: In-Memory Cache diagnostics state
+  const [cacheInfo, setCacheInfo] = useState(null);
+  const [lastCacheStatus, setLastCacheStatus] = useState('MISS');
+
+  // Practical 13: AI Assistant states
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiDisclaimer, setAiDisclaimer] = useState('');
 
   // Filter & Search states
   const [searchQuery, setSearchQuery] = useState('');
@@ -44,7 +60,19 @@ function Tasks() {
   // Practical 8 Supplementary: Toggle heavy analytics view
   const [showAnalytics, setShowAnalytics] = useState(false);
 
-  // 1. Fetch server status and tasks from Express backend
+  // Practical 9: In-Memory Cache diagnostics fetcher
+  const refreshCacheStats = useCallback(async () => {
+    try {
+      const stats = await getCacheStats();
+      if (stats && stats.success) {
+        setCacheInfo(stats);
+      }
+    } catch {
+      // Ignore cache stats errors in offline mode
+    }
+  }, []);
+
+  // 1. Fetch server status, cache diagnostics and tasks from Express backend
   const loadTasks = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -63,16 +91,50 @@ function Tasks() {
       } else {
         setTasks([]);
       }
+
+      // Fetch cache stats (Practical 9)
+      await refreshCacheStats();
     } catch (err) {
       setError(err.message || 'Failed to fetch tasks from backend server.');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [refreshCacheStats]);
 
   useEffect(() => {
     loadTasks();
   }, [loadTasks]);
+
+  // Practical 13: Handle AI Task Generation & Breakdown
+  const handleAiSuggest = async () => {
+    if (!newTitle.trim()) {
+      showError('Please enter a Task Title first so the AI assistant can analyze it.');
+      return;
+    }
+
+    setAiLoading(true);
+    setAiDisclaimer('');
+    try {
+      showInfo('Contacting AI Assistant to draft task details...');
+      const res = await generateAiDescription({
+        title: newTitle.trim(),
+        priority: newPriority,
+      });
+
+      if (res && res.description) {
+        setNewDescription(res.description);
+      }
+      if (res && res.suggestedPriority) {
+        setNewPriority(res.suggestedPriority);
+      }
+      setAiDisclaimer(res.disclaimer || 'AI-generated suggestion. Please review and customize before saving.');
+      showSuccess('AI suggestion populated! You can review or edit before submitting.');
+    } catch (err) {
+      showError(err.message || 'Failed to retrieve AI suggestion.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   // 2. Create Task (POST /tasks) with optimistic UI update
   const handleCreateTask = async (e) => {
@@ -244,6 +306,13 @@ function Tasks() {
             <span className="db-badge">({serverStatus.db})</span>
           </div>
 
+          {cacheInfo && (
+            <div className="server-status-pill cache-status-pill" title="Practical 9: In-Memory node-cache performance metrics">
+              <span>⚡ Cache Hit Ratio: <strong>{cacheInfo.metrics?.hitRatio || '0%'}</strong></span>
+              <span className="cache-counts">({cacheInfo.metrics?.hits || 0}H / {cacheInfo.metrics?.misses || 0}M)</span>
+            </div>
+          )}
+
           <button
             type="button"
             className={`btn-analytics-toggle ${showAnalytics ? 'active' : ''}`}
@@ -253,7 +322,7 @@ function Tasks() {
             📊 {showAnalytics ? 'Hide Analytics' : 'Lazy Load Analytics'}
           </button>
 
-          <button type="button" onClick={loadTasks} className="btn-refresh" title="Re-fetch tasks from backend">
+          <button type="button" onClick={loadTasks} className="btn-refresh" title="Re-fetch tasks and cache metrics">
             🔄 Refresh
           </button>
         </div>
@@ -291,7 +360,7 @@ function Tasks() {
               <input
                 id="task-title"
                 type="text"
-                placeholder="e.g. Implement React Lazy Loading & Suspense"
+                placeholder="e.g. Containerize App with Docker & Compose"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 className="form-input"
@@ -317,17 +386,33 @@ function Tasks() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="task-desc" className="form-label">
-              Description (Optional)
-            </label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <label htmlFor="task-desc" className="form-label" style={{ margin: 0 }}>
+                Description (Optional)
+              </label>
+              <button
+                type="button"
+                onClick={handleAiSuggest}
+                disabled={aiLoading}
+                className="btn-ai-generate"
+                title="Practical 13: Automatically generate task description and breakdown using Gemini AI"
+              >
+                {aiLoading ? '✨ Generating Suggestion...' : '🤖 AI Auto-Draft'}
+              </button>
+            </div>
             <textarea
               id="task-desc"
-              rows="2"
-              placeholder="Describe what needs to be completed..."
+              rows={3}
+              placeholder="Describe what needs to be completed, or click 'AI Auto-Draft' above..."
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
               className="form-textarea"
             ></textarea>
+            {aiDisclaimer && (
+              <div className="ai-disclaimer-pill animate-fade-in" style={{ marginTop: '6px', fontSize: '0.8rem', color: '#6366f1', background: 'rgba(99, 102, 241, 0.08)', padding: '6px 12px', borderRadius: '6px' }}>
+                💡 {aiDisclaimer}
+              </div>
+            )}
           </div>
 
           <div className="form-submit-row">

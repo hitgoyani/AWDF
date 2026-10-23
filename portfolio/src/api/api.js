@@ -140,3 +140,27 @@ export const loginUser = (credentials) =>
  * Get current authenticated user details (/auth/me)
  */
 export const getCurrentUser = () => request('/auth/me');
+
+/* =========================================================================
+   CACHE DIAGNOSTICS (Practical 9: In-Memory Caching)
+   ========================================================================= */
+
+/**
+ * Fetch real-time in-memory cache diagnostics (hit/miss metrics, active keys)
+ */
+export const getCacheStats = () => request('/api/cache-stats');
+
+/* =========================================================================
+   AI ASSISTANT (Practical 13: AI API Integration & Graceful Degradation)
+   ========================================================================= */
+
+/**
+ * Request an AI-generated task description, priority & breakdown
+ * @param {Object} payload - { title: string, priority?: string }
+ */
+export const generateAiDescription = (payload) =>
+  request('/api/ai/generate-description', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
